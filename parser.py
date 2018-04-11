@@ -2,6 +2,14 @@
 STAT 318 Final Project
 Team Rocket Is Blasting Off Again!
 Evelyn Chen & Alexandria Guo
+SPECIAL CASES:
+MEGA / PRIMAL / SMALLsizes / X / Origin
+(find index of first incidence of 'Mega ' replace end of string with '-Mega')
+MEGAS X & Y (Charizard, Mewtwo)
+ALOLA (not in .csv)
+DEOXYS FORMS
+ARCEUS (Others & Normal)
+HOOPA (not in .csv)
 """
 
 import sys
@@ -40,6 +48,7 @@ def load_csv(csv_file):
         if (dp[1] in pkmn_directory):
             print("Adding " + dp[1] + "again")
         else:
+			if dp[1][:]
             pkmn_directory[dp[1]] = [dp[0]] + list(dp[2:len(dp)])
     return pkmn_directory
 

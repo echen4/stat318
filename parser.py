@@ -2,14 +2,6 @@
 STAT 318 Final Project
 Team Rocket Is Blasting Off Again!
 Evelyn Chen & Alexandria Guo
-SPECIAL CASES:
-MEGA / PRIMAL / SMALLsizes / X / Origin
-(find index of first incidence of 'Mega ' replace end of string with '-Mega')
-MEGAS X & Y (Charizard, Mewtwo)
-ALOLA (not in .csv)
-DEOXYS FORMS
-ARCEUS (Others & Normal)
-HOOPA (not in .csv)
 """
 
 import sys

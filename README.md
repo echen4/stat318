@@ -1,4 +1,53 @@
 # stat318
+
+MANUALLY CHANGED .csv & .txt FILES
+
+**** WHAT TO DO? ****
+DARMANITAN
+  --> Original mode
+  --> Zen mode (ability), different stats
+MELOETTA
+  --> Aria forme
+  --> Piroutte forme (move), different stats
+AEGISSLASH
+  --> Blade forme
+  --> Shield forme (move type), swap attack and defense
+
+-- average stats
+-- take higher stats
+-- remove completely
+-- two data points (with duplicated battle data)
+  NOTE: would have to modify total number of battles
+
+SPECIAL CASES:
+MEGA/PRIMAL/AVERAGE (& other sizes)
+	VenasaurMega
+MEGAS X & Y (Charizard, Mewtwo)
+	CharizardMegaX
+FORMES (Deoxys, Shaymin, Tornadus, Thundurus, Landorus, Giritina)
+  ShayminSky
+  (note: DeoxysNormal)
+
+SINGLE CASES:
+ARCEUS (Others & Normal)  
+NIDORAN F/M
+PIKACHU-ORIGINAL
+WORMADAM CLOAKS
+	WormadamTrash
+KYUREM BLACK/WHITE/none
+ZYGARDE50%
+ROTOM ___ ROTOM
+collapse KELDEO from RESOLUTE & ORDINARY FORMES
+FLABÉBÉ --> FLABEBE
+HOOPA (remove second HOOPA), CONFINED/UNBOUND
+
+
+IGNORE (do not modify, will not be accessed in dictionary):
+PIKACHU (Original, Partner, Regions, etc.)
+ALOLA (not in .csv)
+GRENINJA ASH (not in .csv)
+
+
                                          ``,;''''';.                                     
                                     ,';;;;;;;;;;'+';;;;;                                 
                                  ;;;;;;;;;;;;;;;;;;;;;+;;;+                              
@@ -63,12 +112,11 @@
           +''''',```,,,```````````````.,,;``:``;`````'``   ':'::':++++++''''''+'''       
          '''''''```,,,,.```````````.,,,,;````.``:````.``,  ::;::':#++++++'''''+'''''.    
      `+'''''''''``,,,,,,,,,,,,,,,,,,,;+  ```.`````````;`.  ;':::;:++  ;++++'''+''''''';  
-  .'+'''+'''''''..,,,,,,,,,,,,,,,,,+'+   ```,```,````` ``  '''+'::++     ,++++++'''''''+ 
+  .'+'''+'''''''..,,,,,,,,,,,,,,,,,+'+   ```,```,````` ``  '''+'::++     ,++++++'''''''+
  +'''+'+#'''''''+,,,,,,,,,,,,''''''++'   .```',;``````,``  '''+::+++`      ++;#+++''''''.
  '''''++++''''+++++,,';:;:`   :''++'`     .``;'...```````'++:'::+'+++           ;++++''''
 ;''''++++++++':.``                        .```; ,''..````..```:''+++#             `#++'''
- '''++++.                              `''.````'   :;,```.'+''''++#+.               `++' 
+ '''++++.                              `''.````'   :;,```.'+''''++#+.               `++'
  `'++#                              `':':;::```.   ':````  ;+'+#+':                      
                                     :':;::;'+'.      ';``                                
                                     `';:;'.           ;:                                 
-

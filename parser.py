@@ -39,17 +39,20 @@ def load_csv(csv_file):
     for dp in reader:
         if (dp[1] in pkmn_directory):
             print("Adding " + dp[1] + "again")
-        else:
-			if dp[1][:]
-            pkmn_directory[dp[1]] = [dp[0]] + list(dp[2:len(dp)])
+        else: pkmn_directory[dp[1]] = [dp[0]] + list(dp[2:len(dp)])
     return pkmn_directory
 
-def main(txt_data, csv_data, json_out):
-	writeJSON(json_out, parser(txt_data))
-    pkmn_directory1 = load_csv(csv_file)
+def main(txt_data, csv_data):
+	smogon_dict = parser(txt_data)
+	pokedex = load_csv(csv_data)
+	final_dict = {}
+	for key in pokedex:
+		if key not in smogon_dict: print(key + " not found in smogon_dict")
+		else: final_dict[key] = pokedex[key] + smogon_dict[key]
+	print(len(final_dict))
 
 if __name__=='__main__':
-    if len(sys.argv)!=2:
-        print('Usage: python data_loading.py txt_data csv_data json_out')
+    if len(sys.argv)!=3:
+        print('Usage: python data_loading.py txt_data csv_data')
     else:
-        main(sys.argv[1], sys.argv[2], sys.argv[3])
+        main(sys.argv[1], sys.argv[2])

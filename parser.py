@@ -11,18 +11,18 @@ import csv
 def parser(filename):
 	data = {}
 	with open(filename, 'r') as f:
+		total_battles = next(f).split(": ")[1]
+		next(f) #ignore avg. team weight
+		headers = next(f)[2:-3].split("|")
+		headers = [x.strip() for x in headers]
 		for line in f:
-			if "|" in line and "Usage %" not in line:
-				# rank, usage %, raw, %, real, %
+			if "|" in line:
+				# rank, PKMN, usage %, raw, %, real, %
 				newline = line[2:-3].split("|")
 				newline = [x.strip() for x in newline]
 
 				data[newline[1]] = newline
-	return data
-
-def writeJSON(filename, data):
-	with open(filename, 'w') as f:
-		json.dump(data, f)
+	return total_battles, headers, data
 
 def load_csv(csv_file):
     """given a CSV file where each row is a data point,
@@ -33,26 +33,38 @@ def load_csv(csv_file):
     """
     reader = csv.reader(open(csv_file, 'r'))
     pkmn_directory = {}
-    headers = next(reader);
-    print(headers);
-    # PKMN#, Name, Type1, Type2, Total, HP, Attack, Defense, Sp.Atk, Sp.Def, Speed, Generation, Legendary
+    headers = next(reader)
+    print(headers)
     for dp in reader:
         if (dp[1] in pkmn_directory):
             print("Adding " + dp[1] + "again")
         else: pkmn_directory[dp[1]] = [dp[0]] + list(dp[2:len(dp)])
-    return pkmn_directory
+    return headers, pkmn_directory
 
-def main(txt_data, csv_data):
-	smogon_dict = parser(txt_data)
-	pokedex = load_csv(csv_data)
+def writeJSON(filename, data):
+	with open(filename, 'w') as f:
+		json.dump(data, f)
+
+def writeCSV(filename, dict, headers):
+	with open(filename, 'w') as csvfile:
+		spamwriter = csv.writer(csvfile, delimiter=',')
+		spamwriter.writerow(headers)
+		for key in dict:
+			spamwriter.writerow([key] + dict[key])
+
+def main(txt_data, csv_data, output_file):
+	total_battles, headers2, smogon_dict = parser(txt_data)
+	headers1, pokedex = load_csv(csv_data)
 	final_dict = {}
 	for key in pokedex:
 		if key not in smogon_dict: print(key + " not found in smogon_dict")
-		else: final_dict[key] = pokedex[key] + smogon_dict[key]
-	print(len(final_dict))
+		else: final_dict[key] = pokedex[key] + [smogon_dict[key][0]] + smogon_dict[key][2:]
+	headers = headers1 + [headers2[0]] + headers2[2:]
+	print("Saving final_dict as .csv file " + output_file + "...")
+	writeCSV(output_file, final_dict, headers)
 
 if __name__=='__main__':
-    if len(sys.argv)!=3:
-        print('Usage: python data_loading.py txt_data csv_data')
+    if len(sys.argv)!=4:
+        print('Usage: python data_loading.py txt_data csv_data output_file')
     else:
-        main(sys.argv[1], sys.argv[2])
+        main(sys.argv[1], sys.argv[2], sys.argv[3])

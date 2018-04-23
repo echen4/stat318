@@ -59,7 +59,7 @@ def main(txt_data, csv_data, output_file):
 	for key in pokedex:
 		if key not in smogon_dict: print(key + " not found in smogon_dict")
 		else: final_dict[key] = pokedex[key] + [smogon_dict[key][0]] + smogon_dict[key][2:]
-	headers = headers1 + [headers2[0]] + headers2[2:]
+	headers = [headers1[1]] + [headers1[0]] + headers1[2:] + [headers2[0]] + headers2[2:]
 	print("Saving final_dict as .csv file " + output_file + "...")
 	writeCSV(output_file, final_dict, headers)
 

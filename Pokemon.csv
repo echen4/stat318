@@ -557,7 +557,7 @@
 493,ArceusSteel,Steel,,720,120,120,120,120,120,120,4,True
 493,ArceusDark,Dark,,720,120,120,120,120,120,120,4,True
 493,ArceusGhost,Ghost,,720,120,120,120,120,120,120,4,True
-493,ArceusPoison,Poison,720,120,120,120,120,120,120,4,True
+493,ArceusPoison,Poison,,720,120,120,120,120,120,120,4,True
 493,ArceusWater,Water,,720,120,120,120,120,120,120,4,True
 493,ArceusRock,Rock,,720,120,120,120,120,120,120,4,True
 493,ArceusFlying,Flying,,720,120,120,120,120,120,120,4,True

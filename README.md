@@ -1,5 +1,19 @@
 # stat318
 
+## TO DO
+Model building process
+1. Data collection and preparation
+	- outliers (Cook's)
+	- check assumptions about constant variance, constant slope(?), multicollinearity (independence)
+2. Reduction of predictor variables
+3. Model refinement and variable selection
+	- t-test?/partial f-test
+	- boxcox?
+	- interaction (DONE B-) )
+4. Model validation
+	- Cross validation
+	- leave one out validation method thing?
+
 MANUALLY CHANGED .csv & .txt FILES
 - MATCH EACH OTHER IN POKÉMON NAMES & REPLACING EMPTY TYPE 2 VALUES WITH "NONE"
 - REMOVED ALL % IN DATA, RENAMED COLUMNS HEADERS WITH ".PER" FOR RAW AND REAL

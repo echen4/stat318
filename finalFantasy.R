@@ -25,7 +25,7 @@ lm.full <- lm(Usage.Per~.,data=data.new)
 summary(lm.full)
 X <- data.new[,-10]
 Y <- data.new[,10]
-#allSubset <- leaps(X,Y,method="Cp") # ask Wendy Wang about:
+# likely cannot use all subset methods (testing 2^k possible fits), due to k approx = 47, ~1.40e14
 #Error in leaps.setup(x, y, wt = wt, nbest = nbest, nvmax = NCOL(x) + int,  : 
 #  NA/NaN/Inf in foreign function call (arg 4)
 #In addition: Warning message:

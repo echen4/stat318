@@ -7,12 +7,23 @@ Model building process
 	- check assumptions about constant variance, constant slope(?), multicollinearity (independence)
 2. Reduction of predictor variables
 3. Model refinement and variable selection
-	- t-test?/partial f-test
 	- boxcox?
 	- interaction (DONE B-) )
 4. Model validation
 	- Cross validation
 	- leave one out validation method thing?
+
+PLAN:
+	- multicollinearity (independence)
+	[MODEL COMPARISON / VARIABLE SELECTION]
+		- t-test?/partial f-test
+	- outliers (Cook's)
+	- (model diagnostics) check assumptions about constant variance, constant slope(?) (check residuals)
+	- boxcox?
+	- Cross validation
+	- leave one out validation method thing?
+Predicted power? vs significance 
+
 
 MANUALLY CHANGED .csv & .txt FILES
 - MATCH EACH OTHER IN POKÉMON NAMES & REPLACING EMPTY TYPE 2 VALUES WITH "NONE"

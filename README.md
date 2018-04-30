@@ -1,5 +1,10 @@
 # stat318
 
+# QUESTIONS?
+--> use aic to be less stringent at first, and then bic? when adding interaction terms?
+--> pass the transformed fit or regular fit to step() for checking interaction terms?
+--> is the slope similar enough? if not, how to check/plot when there are >1 predictor variable 
+
 ## TO DO
 Model building process
 1. Data collection and preparation

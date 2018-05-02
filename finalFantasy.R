@@ -8,7 +8,7 @@ attach(data)
 # NOT USED: Name, Num, Generation, Rank, Raw, Raw.Per, Real, Real.Per
 is.factor(Type.1) # 3
 is.factor(Type.2) # 4
-is.numeric(Total) # 5 (collinear with other variables)
+is.numeric(Total) # 5 
 is.numeric(HP) # 6
 is.numeric(Attack) # 7
 is.numeric(Defense) # 8
@@ -17,7 +17,7 @@ is.numeric(Sp.Def) # 10
 is.numeric(Speed) # 11
 is.factor(Legendary) # 13
 is.numeric(Usage.Per) # 15
-data.new <- data[,c(-1,-2,-5,-12,-14,-16,-17,-18,-19)]
+data.new <- data[,c(-1,-2,-12,-14,-16,-17,-18,-19)]
 detach(data)
 ### CHECK FOR MULTICOLLINEARITY 
 attach(data.new)
@@ -30,6 +30,9 @@ quantX <- model.matrix(Usage.Per~.,data=quantData)[,-1]
 X < data.new[,-10]
 Y <- data.new[,10]
 vifstep(quantX,th=10)
+detach(data.new)
+data.new <- data.new[-3,]
+attach(data.new)
 ### VARIABLE SELECTION
 #autoSelect.A <- step(lm.full,direction="both",trace=0,k=2) #AIC
 # Usage.Per ~ Type.1 + Sp.Atk + Legendary + Attack

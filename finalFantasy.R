@@ -2,6 +2,7 @@ library(leaps)
 library(MASS)
 library(usdm)
 data <- read.csv("final_proj/stat318/smash2.csv", header=TRUE, na.strings='')
+#data <- read.csv("smash2.csv", header=TRUE, na.strings='')
 #data <- read.csv(file.choose(), header=TRUE)
 n <- dim(data)[1]
 attach(data)
@@ -21,6 +22,7 @@ data.new <- data[,c(-1,-2,-12,-14,-16,-17,-18,-19)]
 detach(data)
 ### CHECK FOR MULTICOLLINEARITY 
 attach(data.new)
+names(data.new)
 data.new$Type.1 <- relevel(Type.1,ref="Normal")
 data.new$Type.2 <- relevel(Type.2,ref="Normal") # consider 'None'
 lm.full <- lm(Usage.Per~.,data=data.new)
@@ -31,7 +33,8 @@ X < data.new[,-10]
 Y <- data.new[,10]
 vifstep(quantX,th=10)
 detach(data.new)
-data.new <- data.new[-3,]
+data.new <- data.new[,-3]
+names(data.new)
 attach(data.new)
 ### VARIABLE SELECTION
 #autoSelect.A <- step(lm.full,direction="both",trace=0,k=2) #AIC

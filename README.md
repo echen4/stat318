@@ -1,5 +1,17 @@
 # stat318
 
+## NOTES FROM WENDY'S MEETING
+- AIC has higher R^2 --> so use AIC (or use model with higher AIC)
+- look at PRESS --> higher Predictvie power on independent obs. = better model
+- make sure you dont compare response with transformed response --> must have same response but can compare different models
+
+- use studentized residual and see patterns there!!!
+- use "which" to find outliers !!!
+
+- look at the characteristics in the second group in residual plot --> are they all legendary?
+
+- remove pokemon with usage percentage = 0's
+
 # QUESTIONS?
 --> use aic to be less stringent at first, and then bic? when adding interaction terms?
 --> pass the transformed fit or regular fit to step() for checking interaction terms?

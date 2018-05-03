@@ -37,6 +37,8 @@ data.new <- data.new[,-3]
 names(data.new)
 attach(data.new)
 ### VARIABLE SELECTION
+lm.full <- lm(Usage.Per~.,data=data.new)
+summary(lm.full)
 #autoSelect.A <- step(lm.full,direction="both",trace=0,k=2) #AIC
 # Usage.Per ~ Type.1 + Sp.Atk + Legendary + Attack
 autoSelect.B <- step(lm.full,direction="both",trace=0,k=log(n)) #BIC
@@ -51,7 +53,7 @@ attach(data.new)
 lm.datanew <- lm(Usage.Per~Attack+Legendary)
 boxcox(lm.datanew)
 lm.transY <- lm(log(Usage.Per)~Attack+Legendary)
-### CHECK FOR OUTLIERS
+                            ### CHECK FOR OUTLIERS
 thresh <- qf(0.5, df1=3, df2=n-3)
 outliers <- which(cooks.distance(lm.transY) > thresh)
 data.new[outliers,]
@@ -69,7 +71,7 @@ abline(fit1,lty=1) #lty=1 uses solid line
 abline(fit2,lty=2) #lty=2 uses dashed line
 ### ADD INTERACTION TERMS
 autoSelectInt.B <- step(lm.bic,.~.^2,direction="both",trace=0,k=log(n)) #BIC
-lm.int <- lm(log(Usage.Per)~Attack+Legendary+Attack:Legendary)
+#lm.int <- lm(log(Usage.Per)~Attack+Legendary+Attack:Legendary)
 lm.int <- lm(Usage.Per~Attack+Legendary+Attack:Legendary)
 
 summary(lm.int)

@@ -3,7 +3,6 @@ library(MASS) # boxcox
 library(usdm) # vifstep
 library(asbio) # press
 data <- read.csv("final_proj/stat318/smash2.csv", header=TRUE, na.strings='')
-#data <- read.csv("smash2.csv", header=TRUE, na.strings='')
 #data <- read.csv(file.choose(), header=TRUE)
 n <- dim(data)[1]
 attach(data)
@@ -32,7 +31,7 @@ lm.full <- lm(Calc.Usage~.,data=data.new)
 summary(lm.full)
 quantData <- data.new[,c(-1,-2)]
 quantX <- model.matrix(Calc.Usage~.,data=quantData)[,-1]
-X < data.new[,-10]
+X <- data.new[,-10]
 Y <- data.new[,10]
 vifstep(quantX,th=10)
 detach(data.new)
@@ -44,64 +43,44 @@ lm.full <- lm(Calc.Usage~.,data=data.new)
 summary(lm.full)
 autoSelect.A <- step(lm.full,direction="both",trace=0,k=2) #AIC
 # Usage.Per ~ Type.1 + Sp.Atk + Legendary + Attack
-#autoSelect.B <- step(lm.full,direction="both",trace=0,k=log(n)) #BIC
-# Usage.Per ~ Attack + Legendary
 lm.aic <- lm(Calc.Usage~Type.1+Sp.Atk+Attack+Legendary)
 summary(lm.aic)
-### TRANSFORMATION
-boxcox(lm.aic)
-trans <- boxcox(lm.aic)
-trans$x[which.max(trans$y)]
-lm.transY <- lm(log(Calc.Usage)~Type.1+Sp.Atk+Attack+Legendary)
 ### CHECK FOR INFLUENTIAL POINTS
 thresh <- qf(0.5, df1=22, df2=n-22)
-outliers <- which(cooks.distance(lm.transY) > thresh)
+outliers <- which(cooks.distance(lm.aic) > thresh)
 data.new[outliers,]
-summary(lm.transY)
-plot(lm.transY)
 ### CHECK MODEL ASSUMPTIONS
 scatter.smooth(residuals(lm.full)~predict(lm.full))
-scatter.smooth(residuals(lm.aic)~predict(lm.aic))
-scatter.smooth(residuals(lm.transY)~predict(lm.transY)) # ordinary residual
-scatter.smooth(rstudent(lm.transY)~predict(lm.transY)) # studentized residual
-# look for obvious clustering in residuals by Legendary
-c1 <- data.new[(rstudent(lm.transY)<0.2 & predict(lm.transY)<5.5),]
-c2 <- data.new[(rstudent(lm.transY)>=0.2 | predict(lm.transY)>=5.5),]
-sum(c1$Legendary=="True")/(sum(c1$Legendary=="True")+sum(c1$Legendary=="False"))
-sum(c2$Legendary=="True")/(sum(c2$Legendary=="True")+sum(c2$Legendary=="False"))
-# with(subset(data.new,Legendary=="False"),plot(log(Usage.Per)~Attack, col="red"))
-# with(subset(data.new,Legendary=="True"),points(log(Usage.Per)~Attack, col="blue"))
-# fit1 = lm(log(Usage.Per)~Attack,subset=Legendary=="False")#model for normies
-# fit2 = lm(log(Usage.Per)~Attack,subset=Legendary=="True") #model for legends
-# abline(fit1,lty=1) #lty=1 uses solid line
-# abline(fit2,lty=2) #lty=2 uses dashed line
-press(lm.aic) # compares to lm.full
-press(lm.transY) # compare to lm.full with log transformation (unimplemented)
-summary(lm.transY)
-plot(lm.transY)
-# outliers in QQ plot: 33 (smeargle), 573 (shuckle), 641 (chansey)
+scatter.smooth(residuals(lm.aic)~predict(lm.aic)) # ordinary residual
+scatter.smooth(rstudent(lm.aic)~predict(lm.aic)) # studentized residual
+press(lm.aic) 
+abs(press(lm.full) - press(lm.aic))# compares to lm.full
+plot(lm.aic)
+# outliers: 33 (smeargle), 53 (xerneas), 100 (rayquaza mega), 666 (primal groudon)
 # cite https://www.smogon.com/dex/sm/pokemon/
-### REDEFINING LEVELS
-# Type.1: Bug, Dark, Fairy, (Fighting), (Flying), Ground, Steel are > 0.05 significance
-levels(data.new$Type.1) <- c(levels(data.new$Type.1),"NotSig")
-data.new$Type.1[(data.new$Type.1=="Bug" | data.new$Type.1=="Dark" | 
-                   data.new$Type.1=="Fairy" | data.new$Type.1=="Fighting" | 
-                   data.new$Type.1=="Flying" | data.new$Type.1=="Ground" | 
-                   data.new$Type.1=="Steel")] <- "NotSig"
-data.new$Type.1 <- factor(data.new$Type.1)
-levels(data.new$Type.1)
-data.new$Type.1 <- relevel(Type.1,ref="Normal")
 ### ADD INTERACTION TERMS
-lm.reformed <- lm(Calc.Usage~Type.1+Attack+Sp.Atk+Legendary)
-autoSelectInt.A <- step(lm.reformed,.~.^2,direction="both",trace=0,k=2) #AIC
-autoSelectInt.B <- step(lm.reformed,.~.^2,direction="both",trace=0,k=log(n)) #BIC
+autoSelectInt.A <- step(lm.aic,.~.^2,direction="both",trace=0,k=2) #AIC
+autoSelectInt.B <- step(lm.aic,.~.^2,direction="both",trace=0,k=log(n)) #BIC
 lm.intA <- lm(Calc.Usage~Type.1+Attack+Sp.Atk+Attack:Sp.Atk+Type.1:Attack)
-lm.intA <- lm(Calc.Usage~Attack+Sp.Atk+Attack:Sp.Atk)
+lm.intB <- lm(Calc.Usage~Attack+Sp.Atk+Attack:Sp.Atk)
+summary(lm.intA)
+summary(lm.intB)
 #lm.int <- lm(log(Usage.Per)~Attack+Legendary+Attack:Legendary)
 lm.int <- lm(Calc.Usage~Attack+Legendary+Attack:Legendary)
 scatter.smooth(residuals(lm.int)~predict(lm.int))
 
 summary(lm.int)
+### TRANSFORMATION
+boxcox(lm.aic)
+trans <- boxcox(lm.aic)
+trans$x[which.max(trans$y)]
+lm.transY <- lm(log(Calc.Usage)~Type.1+Sp.Atk+Attack+Legendary)
+# look for obvious clustering in residuals by Legendary
+c1 <- data.new[(rstudent(lm.transY)<0.2 & predict(lm.transY)<5.5),]
+c2 <- data.new[(rstudent(lm.transY)>=0.2 | predict(lm.transY)>=5.5),]
+sum(c1$Legendary=="True")/(sum(c1$Legendary=="True")+sum(c1$Legendary=="False"))
+sum(c2$Legendary=="True")/(sum(c2$Legendary=="True")+sum(c2$Legendary=="False"))
+# outliers in QQ plot: 33 (smeargle), 573 (shuckle), 641 (chansey)
 detach(data.new)
 
 

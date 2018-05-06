@@ -42,13 +42,9 @@ attach(data.new)
 lm.full <- lm(Calc.Usage~.,data=data.new)
 summary(lm.full)
 autoSelect.A <- step(lm.full,direction="both",trace=0,k=2) #AIC
-# Usage.Per ~ Type.1 + Sp.Atk + Legendary + Attack
+# Usage.Per ~ Type.1 + Sp.Atk + Legendary + Attack (adjr2=0.1883)
 lm.aic <- lm(Calc.Usage~Type.1+Sp.Atk+Attack+Legendary)
 summary(lm.aic)
-### CHECK FOR INFLUENTIAL POINTS
-thresh <- qf(0.5, df1=22, df2=n-22)
-outliers <- which(cooks.distance(lm.aic) > thresh)
-data.new[outliers,]
 ### CHECK MODEL ASSUMPTIONS
 scatter.smooth(residuals(lm.full)~predict(lm.full))
 scatter.smooth(residuals(lm.aic)~predict(lm.aic)) # ordinary residual
@@ -60,29 +56,29 @@ plot(lm.aic)
 # cite https://www.smogon.com/dex/sm/pokemon/
 ### ADD INTERACTION TERMS
 autoSelectInt.A <- step(lm.aic,.~.^2,direction="both",trace=0,k=2) #AIC
+# Calc.Usage ~ Type.1+Attack+Sp.Atk+Attack:Sp.Atk+Type.1:Attack (adjr2 = 0.2987)
 autoSelectInt.B <- step(lm.aic,.~.^2,direction="both",trace=0,k=log(n)) #BIC
+# Calc.Usage ~ Attack+Sp.Atk+Attack:Sp.Atk (adjr2 = 0.2395)
 lm.intA <- lm(Calc.Usage~Type.1+Attack+Sp.Atk+Attack:Sp.Atk+Type.1:Attack)
-lm.intB <- lm(Calc.Usage~Attack+Sp.Atk+Attack:Sp.Atk)
 summary(lm.intA)
-summary(lm.intB)
-#lm.int <- lm(log(Usage.Per)~Attack+Legendary+Attack:Legendary)
-lm.int <- lm(Calc.Usage~Attack+Legendary+Attack:Legendary)
-scatter.smooth(residuals(lm.int)~predict(lm.int))
-
-summary(lm.int)
+### CHECK MODEL ASSUMPTIONS (AGAIN)
+scatter.smooth(residuals(lm.intA)~predict(lm.intA)) # ordinary residual
+scatter.smooth(rstudent(lm.intA)~predict(lm.intA)) # studentized residual
+intOut <- data[(rstudent(lm.intA)>4.9 | predict(lm.intA)>0.07),] # all top used Pokémon
 ### TRANSFORMATION
-boxcox(lm.aic)
-trans <- boxcox(lm.aic)
+boxcox(lm.intA)
+trans <- boxcox(lm.intA)
 trans$x[which.max(trans$y)]
-lm.transY <- lm(log(Calc.Usage)~Type.1+Sp.Atk+Attack+Legendary)
-# look for obvious clustering in residuals by Legendary
-c1 <- data.new[(rstudent(lm.transY)<0.2 & predict(lm.transY)<5.5),]
-c2 <- data.new[(rstudent(lm.transY)>=0.2 | predict(lm.transY)>=5.5),]
-sum(c1$Legendary=="True")/(sum(c1$Legendary=="True")+sum(c1$Legendary=="False"))
-sum(c2$Legendary=="True")/(sum(c2$Legendary=="True")+sum(c2$Legendary=="False"))
-# outliers in QQ plot: 33 (smeargle), 573 (shuckle), 641 (chansey)
-detach(data.new)
-
+lm.transY <- lm(log(Calc.Usage)~Type.1+Attack+Sp.Atk+Attack:Sp.Atk+Type.1:Attack)
+scatter.smooth(rstudent(lm.transY)~predict(lm.transY)) # studentized residual
+plot(lm.transY)
+# outliers in QQ plot: 11 (magikarp), 33 (smeargle), 573 (shuckle)
+### CHECK FOR INFLUENTIAL POINTS
+thresh <- qf(0.5, df1=37, df2=n-37)
+outliers <- which(cooks.distance(lm.transY) > thresh)
+data[outliers,]
+# no influential, outlying points
+summary(lm.transY)
 
 
 

@@ -58,8 +58,8 @@ plot(lm.aic)
 autoSelectInt.A <- step(lm.aic,.~.^2,direction="both",trace=0,k=2) #AIC
 # Calc.Usage ~ Type.1+HP+Attack+Defense+Sp.Atk+Speed+Attack:Sp.Atk+Type.1:Attack+HP:Defense+Type.1:Sp.Atk (adjr2 = 0.3616)
 autoSelectInt.B <- step(lm.aic,.~.^2,direction="both",trace=0,k=log(n)) #BIC
-# Calc.Usage ~ Attack+Sp.Atk+Attack:Sp.Atk (adjr2 = 0.2395)
-lm.intA <- lm(Calc.Usage~Type.1+Attack+Sp.Atk+Attack:Sp.Atk+Type.1:Attack)
+# Calc.Usage ~ HP+Attack+Defense+Sp.Atk+Speed+Attack:Sp.Atk (adjr2 = 0.2778)
+lm.intA <- lm(Calc.Usage~Type.1+HP+Attack+Defense+Sp.Atk+Speed+Attack:Sp.Atk+Type.1:Attack+HP:Defense+Type.1:Sp.Atk)
 summary(lm.intA)
 ### CHECK MODEL ASSUMPTIONS (AGAIN)
 scatter.smooth(residuals(lm.intA)~predict(lm.intA)) # ordinary residual
@@ -69,16 +69,17 @@ intOut <- data[(rstudent(lm.intA)>4.9 | predict(lm.intA)>0.07),] # all top used 
 boxcox(lm.intA)
 trans <- boxcox(lm.intA)
 trans$x[which.max(trans$y)]
-lm.transY <- lm(log(Calc.Usage)~Type.1+Attack+Sp.Atk+Attack:Sp.Atk+Type.1:Attack)
+lm.transY <- lm(log(Calc.Usage)~Type.1+HP+Attack+Defense+Sp.Atk+Speed+Attack:Sp.Atk+Type.1:Attack+HP:Defense+Type.1:Sp.Atk)
 scatter.smooth(rstudent(lm.transY)~predict(lm.transY)) # studentized residual
 plot(lm.transY)
-# outliers in QQ plot: 11 (magikarp), 33 (smeargle), 573 (shuckle)
+# outliers in QQ plot: 33 (smeargle), 75 (ditto), 554 (shedinja)
+# influential / high leverage: 121 (noibat), 264 (noivern)
 ### CHECK FOR INFLUENTIAL POINTS
-thresh <- qf(0.5, df1=37, df2=n-37)
+thresh <- qf(0.5, df1=58, df2=n-58)
 outliers <- which(cooks.distance(lm.transY) > thresh)
 data[outliers,]
 # no influential, outlying points
-summary(lm.transY)
+summary(lm.transY) # (adjr2 = 0.5997)
 
 
 

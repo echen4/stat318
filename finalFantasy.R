@@ -42,8 +42,8 @@ attach(data.new)
 lm.full <- lm(Calc.Usage~.,data=data.new)
 summary(lm.full)
 autoSelect.A <- step(lm.full,direction="both",trace=0,k=2) #AIC
-# Usage.Per ~ Type.1 + Sp.Atk + Legendary + Attack (adjr2=0.1883)
-lm.aic <- lm(Calc.Usage~Type.1+Sp.Atk+Attack+Legendary)
+# Usage.Per ~ Type.1 + HP + Attack + Defense + Sp.Atk + Speed (adjr2=0.2086)
+lm.aic <- lm(Calc.Usage~Type.1+HP+Attack+Defense+Sp.Atk+Speed)
 summary(lm.aic)
 ### CHECK MODEL ASSUMPTIONS
 scatter.smooth(residuals(lm.full)~predict(lm.full))
@@ -56,7 +56,7 @@ plot(lm.aic)
 # cite https://www.smogon.com/dex/sm/pokemon/
 ### ADD INTERACTION TERMS
 autoSelectInt.A <- step(lm.aic,.~.^2,direction="both",trace=0,k=2) #AIC
-# Calc.Usage ~ Type.1+Attack+Sp.Atk+Attack:Sp.Atk+Type.1:Attack (adjr2 = 0.2987)
+# Calc.Usage ~ Type.1+HP+Attack+Defense+Sp.Atk+Speed+Attack:Sp.Atk+Type.1:Attack+HP:Defense+Type.1:Sp.Atk (adjr2 = 0.3616)
 autoSelectInt.B <- step(lm.aic,.~.^2,direction="both",trace=0,k=log(n)) #BIC
 # Calc.Usage ~ Attack+Sp.Atk+Attack:Sp.Atk (adjr2 = 0.2395)
 lm.intA <- lm(Calc.Usage~Type.1+Attack+Sp.Atk+Attack:Sp.Atk+Type.1:Attack)
@@ -82,10 +82,7 @@ summary(lm.transY)
 
 
 
-
-
-
-
-
-
-
+library(ggplot2)
+ggplot(data, aes(Legendary, Total)) + geom_boxplot(colour="red")
+ggplot(data, aes(Attack, Defense)) + geom_point()
+ggplot(data, aes(Type.1, Total)) + geom_boxplot(colour="red", fill="red", alpha=0.5,outlier.shape=1)

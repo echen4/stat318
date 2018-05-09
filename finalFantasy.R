@@ -29,7 +29,7 @@ data.new$Type.1 <- relevel(Type.1,ref="Normal")
 data.new$Type.2 <- relevel(Type.2,ref="Normal") # consider 'None'
 lm.full <- lm(Calc.Usage~.,data=data.new)
 summary(lm.full)
-quantData <- data.new[,c(-1,-2)]
+quantData <- data.new[,c(-1,-2,-10)]
 quantX <- model.matrix(Calc.Usage~.,data=quantData)[,-1]
 X <- data.new[,-10]
 Y <- data.new[,10]
@@ -47,7 +47,7 @@ lm.aic <- lm(Calc.Usage~Type.1+HP+Attack+Defense+Sp.Atk+Speed)
 summary(lm.aic)
 ### CHECK MODEL ASSUMPTIONS
 scatter.smooth(residuals(lm.full)~predict(lm.full))
-scatter.smooth(residuals(lm.aic)~predict(lm.aic)) # ordinary residual
+scatter.smooth(residuals(lm.aic)~predict(lm.aic)) # ordinary residu-8080000al
 scatter.smooth(rstudent(lm.aic)~predict(lm.aic)) # studentized residual
 press(lm.aic) 
 abs(press(lm.full) - press(lm.aic))# compares to lm.full
@@ -61,10 +61,10 @@ autoSelectInt.B <- step(lm.aic,.~.^2,direction="both",trace=0,k=log(n)) #BIC
 # Calc.Usage ~ HP+Attack+Defense+Sp.Atk+Speed+Attack:Sp.Atk (adjr2 = 0.2778)
 lm.intA <- lm(Calc.Usage~Type.1+HP+Attack+Defense+Sp.Atk+Speed+Attack:Sp.Atk+Type.1:Attack+HP:Defense+Type.1:Sp.Atk)
 summary(lm.intA)
+anova(lm.intA)
 ### CHECK MODEL ASSUMPTIONS (AGAIN)
 scatter.smooth(residuals(lm.intA)~predict(lm.intA)) # ordinary residual
 scatter.smooth(rstudent(lm.intA)~predict(lm.intA)) # studentized residual
-intOut <- data[(rstudent(lm.intA)>4.9 | predict(lm.intA)>0.07),] # all top used Pokémon
 ### TRANSFORMATION
 boxcox(lm.intA)
 trans <- boxcox(lm.intA)

@@ -41,9 +41,8 @@ attach(data.new)
 ### VARIABLE SELECTION
 lm.full <- lm(Calc.Usage~.,data=data.new)
 summary(lm.full)
-autoSelect.A <- step(lm.full,direction="both",trace=0,k=2) #AIC
+lm.aic <- step(lm.full,direction="both",trace=0,k=2) #AIC
 # Usage.Per ~ Type.1 + HP + Attack + Defense + Sp.Atk + Speed (adjr2=0.2086)
-lm.aic <- lm(Calc.Usage~Type.1+HP+Attack+Defense+Sp.Atk+Speed)
 summary(lm.aic)
 ### CHECK MODEL ASSUMPTIONS
 scatter.smooth(residuals(lm.full)~predict(lm.full))
@@ -55,13 +54,16 @@ plot(lm.aic)
 # outliers: 33 (smeargle), 53 (xerneas), 100 (rayquaza mega), 666 (primal groudon)
 # cite https://www.smogon.com/dex/sm/pokemon/
 ### ADD INTERACTION TERMS
-autoSelectInt.A <- step(lm.aic,.~.^2,direction="both",trace=0,k=2) #AIC
+lm.intA <- step(lm.aic,.~.^2,direction="both",trace=0,k=2) #AIC
 # Calc.Usage ~ Type.1+HP+Attack+Defense+Sp.Atk+Speed+Attack:Sp.Atk+Type.1:Attack+HP:Defense+Type.1:Sp.Atk (adjr2 = 0.3616)
-autoSelectInt.B <- step(lm.aic,.~.^2,direction="both",trace=0,k=log(n)) #BIC
+lm.intB<- step(lm.aic,.~.^2,direction="both",trace=0,k=log(n)) #BIC
 # Calc.Usage ~ HP+Attack+Defense+Sp.Atk+Speed+Attack:Sp.Atk (adjr2 = 0.2778)
-lm.intA <- lm(Calc.Usage~Type.1+HP+Attack+Defense+Sp.Atk+Speed+Attack:Sp.Atk+Type.1:Attack+HP:Defense+Type.1:Sp.Atk)
+summary(lm.intA) # 0.869048 (individ-t, Attack:Sp.Atk possibly insignificant)
+anova(lm.intA) # 0.52088, (partial-f, Type.1:Attack possibly insignificant)
+lm.reOrder <- lm(Calc.Usage~Type.1+HP+Attack+Defense+Sp.Atk+Speed+Type.1:Sp.Atk+HP:Defense+Attack:Sp.Atk+Type.1:Attack)
+anova(lm.reOrder)
+lm.intA <- lm(Calc.Usage~Type.1+HP+Attack+Defense+Sp.Atk+Speed+Type.1:Sp.Atk+HP:Defense)
 summary(lm.intA)
-anova(lm.intA)
 ### CHECK MODEL ASSUMPTIONS (AGAIN)
 scatter.smooth(residuals(lm.intA)~predict(lm.intA)) # ordinary residual
 scatter.smooth(rstudent(lm.intA)~predict(lm.intA)) # studentized residual
@@ -69,13 +71,13 @@ scatter.smooth(rstudent(lm.intA)~predict(lm.intA)) # studentized residual
 boxcox(lm.intA)
 trans <- boxcox(lm.intA)
 trans$x[which.max(trans$y)]
-lm.transY <- lm(log(Calc.Usage)~Type.1+HP+Attack+Defense+Sp.Atk+Speed+Attack:Sp.Atk+Type.1:Attack+HP:Defense+Type.1:Sp.Atk)
+lm.transY <- lm(log(Calc.Usage)~Type.1+HP+Attack+Defense+Sp.Atk+Speed+HP:Defense+Type.1:Sp.Atk)
 scatter.smooth(rstudent(lm.transY)~predict(lm.transY)) # studentized residual
 plot(lm.transY)
 # outliers in QQ plot: 33 (smeargle), 75 (ditto), 554 (shedinja)
 # influential / high leverage: 121 (noibat), 264 (noivern)
 ### CHECK FOR INFLUENTIAL POINTS
-thresh <- qf(0.5, df1=58, df2=n-58)
+thresh <- qf(0.5, df1=40, df2=n-40)
 outliers <- which(cooks.distance(lm.transY) > thresh)
 data[outliers,]
 # no influential, outlying points

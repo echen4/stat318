@@ -83,6 +83,9 @@ data[outliers,]
 # no influential, outlying points
 summary(lm.transY) # (adjr2 = 0.5997)
 
+lm.transY <- lm(log(Calc.Usage)~Type.1+HP+Attack+Defense+Sp.Atk+Speed+HP:Defense+Type.1:Sp.Atk)
+anova(lm.transY, test='Chisq')
+
 
 
 library(ggplot2)

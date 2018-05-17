@@ -1,5 +1,19 @@
 # stat318
 
+## NOTES
+- Ultra Necrozma --> not in anything goes list but also... weird conditions
+	- In order to use: must have Dusk Mane or Dawn Wings Necrozma hold Ultra-Necrozium Z and use Ultra Burst in battle.
+- Zygarde --> complete forme is not in anything goes list, but 10% forme is
+	- added 10% forme manually
+- Lycanroc --> has three forms
+	- manually added Dusk and Midnight form which are mentioned in anything goes list but not in pokemon stats list
+		- Midnight has same stats as normal form
+		- dusk form has different stats
+- Ultra Beasts --> according to bulbapedia, they are NOT considered legendary pokemon --> should we just mark them as FALSE?		- Added new Ultra Beasts from UltraSun + UltraMoon --> Poipole, Naganadel, Stakataka, Blacephalon
+- Marshadow --> new legendary Pokemon; manually added
+- Zeraora --> not added bc not released yet
+
+
 ## NOTES FROM WENDY'S MEETING
 - AIC has higher R^2 --> so use AIC (or use model with higher AIC)
 - look at PRESS --> higher Predictvie power on independent obs. = better model

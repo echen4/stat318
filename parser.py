@@ -24,6 +24,32 @@ def parser(filename):
 				data[newline[1]] = newline
 	return total_battles, headers, data
 
+
+def load_csv2(csv_file):
+    """
+    really dumb script to fix formatting of type names and find total values
+    """
+    reader = csv.reader(open(csv_file, 'r'))
+    pkmn_directory = {}
+    headers = next(reader)
+    print(headers)
+    with open("Pokemon_new.csv", 'w') as csvfile:
+    	spamwriter = csv.writer(csvfile, delimiter=',')
+    	spamwriter.writerow(headers)
+    	for line in reader:
+    		newline = line
+    		if(line[3][0] in "abcdefghijklmnopqrstuvwxyz"):
+    			line[3] = line[3][0].upper() + line[3][1:]
+
+    		if(len(line[4]) > 0 and line[4][0] in "abcdefghijklmnopqrstuvwxyz"):
+    			line[4] = line[4][0].upper() + line[4][1:]
+
+    		if(len(line[5]) == 0):
+    			line[5] = int(line[6]) + int(line[7]) + int(line[8]) + int(line[9]) + int(line[10]) + int(line[11])
+    		spamwriter.writerow(newline)
+
+    
+
 def load_csv(csv_file):
     """given a CSV file where each row is a data point,
     with the first column being user/item id, the second column being the

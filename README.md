@@ -3,8 +3,10 @@
 ## NOTES
 - Ultra Necrozma --> not in anything goes list but also... weird conditions
 	- In order to use: must have Dusk Mane or Dawn Wings Necrozma hold Ultra-Necrozium Z and use Ultra Burst in battle.
+	- Ultra Necrozma not mentioned in anything goes list
 - Zygarde --> complete forme is not in anything goes list, but 10% forme is
 	- added 10% forme manually
+	- complete forme not in anything goes list --> did not add to csv
 - Lycanroc --> has three forms
 	- manually added Dusk and Midnight form which are mentioned in anything goes list but not in pokemon stats list
 		- Midnight has same stats as normal form

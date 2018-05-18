@@ -1,5 +1,49 @@
 # stat318
 
+## 5/18/2018 
+https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_with_form_differences
+
+(CF) all Mega (X/Y), Primal: list separately
+(SS) Pikachu: COSMETIC, combine listings
+(SS) Unown: COSMETIC
+(SF) Castform: OMITTED, not usual gameplay to go through all forms
+(CF) Deoxys: list separately
+(SS) Burmy: COSMETIC
+(DT) Wormadam: list separately
+(DT) Rotom: list separately
+(CF) Giratina: list separately
+(CF) Shaymin: list separately
+(DT) Arceus: list separately
+(SF) Darmanitan: list separately
+(CF) Tornadus: list separately
+(CF) Thundurus: list separately
+(CF) Landorus: list separately
+(CF) Kyurem: list separately
+(SF) Meloetta: list separately
+(SF) Aegislash: list separately
+(CF) Pumpkaboo sizes: list separately
+(CF) Gourgeist sizes: list separately
+(CF/SF) Zygarde: list 50% and 10% separately, create a Complete Zygarde listing with usages added
+(CF) Hoopa: list separately
+(DT) Oricorio list separately
+(CF) Lycanroc: list separately
+(SF) Wishiwashi: list separately
+(DT) Silvally: list separately
+(SF) Minior: list separately
+(CF/SF) Necrozma: list base form separately, create a Ultra Necrozma listing with usages added from only Dusk and Dawn Wing Necrozma
+
+New denominator is total num for raw
+
+SS = (Same Stats), purely cosmetic
+	—>  if stays in single form, maybe combine listings?
+DT = same stats (Different Type)
+	—> if switches between forms, maybe combine?
+CF = diff stats (maybe type), stays in a single form for battle (Constant Form)
+	—> list separately
+SF = diff stats (maybe type), switches between forms in a single battle (Switches Forms)
+	—> list separately
+
+
 ## NOTES
 - Ultra Necrozma --> not in anything goes list but also... weird conditions
 	- In order to use: must have Dusk Mane or Dawn Wings Necrozma hold Ultra-Necrozium Z and use Ultra Burst in battle.

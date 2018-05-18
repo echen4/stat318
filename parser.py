@@ -20,8 +20,21 @@ def parser(filename):
 				# rank, PKMN, usage %, raw, %, real, %
 				newline = line[2:-3].split("|")
 				newline = [x.strip() for x in newline]
-
-				data[newline[1]] = newline
+				if "Pikachu" in newline[1] and "Pikachu" in data:
+					previousUsage = float(data["Pikachu"][2][:-1])
+					data["Pikachu"][2] = str((previousUsage + float(newline[2][:-1]))) + "%"
+					previousRaw = float(data["Pikachu"][3])
+					data["Pikachu"][3] = (previousRaw + float(newline[3]))
+					previousPer1 = float(data["Pikachu"][4][:-1])
+					data["Pikachu"][4] = str((previousPer1 + float(newline[4][:-1]))) + "%"
+					previousReal = float(data["Pikachu"][5])
+					data["Pikachu"][5] = (previousRaw + float(newline[5]))
+					previousPer2 = float(data["Pikachu"][6][:-1])
+					data["Pikachu"][6] = str((previousPer2 + float(newline[6][:-1]))) + "%"
+				elif "Pikachu" in newline[1] and "Pikachu" not in data:
+					data["Pikachu"] = newline
+				else:
+					data[newline[1]] = newline
 	return total_battles, headers, data
 
 

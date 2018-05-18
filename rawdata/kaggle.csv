@@ -549,7 +549,7 @@ tex,Name,Can_Evolve,Type 1,Type 2,Total,HP,Attack,Defense,Sp. Atk,Sp. Def,Speed,
 477,Dusknoir,FALSE,Ghost,,525,45,100,135,65,135,45,4,FALSE
 478,Froslass,FALSE,Ice,Ghost,480,70,80,70,80,70,110,4,FALSE
 479,Rotom,FALSE,Electric,Ghost,440,50,50,77,95,77,91,4,FALSE
-479,Zygarde10%,FALSE,Electric,Fire,520,50,65,107,105,107,86,4,FALSE
+479,RotomHeat,FALSE,Electric,Fire,520,50,65,107,105,107,86,4,FALSE
 479,RotomWash,FALSE,Electric,Water,520,50,65,107,105,107,86,4,FALSE
 479,RotomFrost,FALSE,Electric,Ice,520,50,65,107,105,107,86,4,FALSE
 479,RotomFan,FALSE,Electric,Flying,520,50,65,107,105,107,86,4,FALSE
@@ -828,7 +828,7 @@ tex,Name,Can_Evolve,Type 1,Type 2,Total,HP,Attack,Defense,Sp. Atk,Sp. Def,Speed,
 716,Xerneas,FALSE,Fairy,,680,126,131,95,131,98,99,6,TRUE
 717,Yveltal,FALSE,Dark,Flying,680,126,131,95,131,98,99,6,TRUE
 718,Zygarde50%,FALSE,Dragon,Ground,600,108,100,121,81,95,95,6,TRUE
-718,Zygarde-10%,FALSE,Dragon,Ground,486,54,100,71,61,85,115,7,TRUE
+718,Zygarde10%,FALSE,Dragon,Ground,486,54,100,71,61,85,115,7,TRUE
 718,ZygardeComplete,FALSE,Dragon,Ground,708,216,100,121,91,95,85,7,TRUE
 719,Diancie,FALSE,Rock,Fairy,600,50,100,150,100,150,50,6,TRUE
 719,DiancieMega,FALSE,Rock,Fairy,700,50,160,110,160,110,110,6,TRUE

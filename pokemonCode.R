@@ -2,24 +2,26 @@ library(leaps) # leaps
 library(MASS) # boxcox
 library(usdm) # vifstep
 library(asbio) # press
-data <- read.csv("final_proj/stat318/smash2.csv", header=TRUE, na.strings='')
+data <- read.csv("final_proj/stat318/combined_data.csv", header=TRUE, na.strings='')
 #data <- read.csv(file.choose(), header=TRUE)
 n <- dim(data)[1]
 attach(data)
 # NOT USED: Name, Num, Generation, Rank, Usage.Per, Raw, Raw.Per, Real, Real.Per
-is.factor(Type.1) # 3
-is.factor(Type.2) # 4
-is.numeric(Total) # 5 
-is.numeric(HP) # 6
-is.numeric(Attack) # 7
-is.numeric(Defense) # 8
-is.numeric(Sp.Atk) # 9
-is.numeric(Sp.Def) # 10
-is.numeric(Speed) # 11
-is.factor(Legendary) # 13
-totBattle <- 523289
-Calc.Usage <- Raw / totBattle # counts all Pokémon in team, for popularity
-data.new <- data[,c(-1,-2,-12,-14,-15, -16,-17,-18,-19)]
+is.logical(Can_Evolve) #3
+is.factor(Type.1) # 4
+is.factor(Type.2) # 5
+is.numeric(Total) # 6 
+is.numeric(HP) # 7
+is.numeric(Attack) # 8
+is.numeric(Defense) # 9
+is.numeric(Sp.Atk) # 10
+is.numeric(Sp.Def) # 11
+is.numeric(Speed) # 12
+is.logical(Legendary) # 14
+is.numeric(Raw) #17
+totPoke <- sum(Raw)
+Calc.Usage <- 100 * Raw / totPoke # counts all Pokémon in team, for popularity
+data.new <- data[,-c(1,2,13,15,16,17,18,19,20)]
 data.new <- cbind(data.new, Calc.Usage)
 detach(data)
 ### CHECK FOR MULTICOLLINEARITY 
@@ -29,20 +31,21 @@ data.new$Type.1 <- relevel(Type.1,ref="Normal")
 data.new$Type.2 <- relevel(Type.2,ref="Normal") # consider 'None'
 lm.full <- lm(Calc.Usage~.,data=data.new)
 summary(lm.full)
-quantData <- data.new[,c(-1,-2,-10)]
+quantData <- data.new[,-c(1,2,3,11)]
 quantX <- model.matrix(Calc.Usage~.,data=quantData)[,-1]
-X <- data.new[,-10]
-Y <- data.new[,10]
+X <- data.new[,-12]
+Y <- data.new[,12]
 vifstep(quantX,th=10)
 detach(data.new)
-data.new <- data.new[,-3]
+data.new <- data.new[,-4]
 names(data.new)
 attach(data.new)
 ### VARIABLE SELECTION
 lm.full <- lm(Calc.Usage~.,data=data.new)
 summary(lm.full)
 lm.aic <- step(lm.full,direction="both",trace=0,k=2) #AIC
-# Usage.Per ~ Type.1 + HP + Attack + Defense + Sp.Atk + Speed (adjr2=0.2086)
+# RUN 1: Calc.Usage ~ Type.1 + HP + Attack + Sp.Atk + Defense + Speed (adjr2=0.2086)
+# RUN 2: Calc.Usage ~ Type.2 + HP + Attack + Sp.Atk + Sp.Def + Speed (adjr2=0.2142)
 summary(lm.aic)
 ### CHECK MODEL ASSUMPTIONS
 scatter.smooth(residuals(lm.full)~predict(lm.full))
@@ -51,18 +54,14 @@ scatter.smooth(rstudent(lm.aic)~predict(lm.aic)) # studentized residual
 press(lm.aic) 
 abs(press(lm.full) - press(lm.aic))# compares to lm.full
 plot(lm.aic)
-# outliers: 33 (smeargle), 53 (xerneas), 100 (rayquaza mega), 666 (primal groudon)
+# outliers: 52 (GroudonPrimal), 362 (Marshadow), 421 (Smeargle), 770 (RayquazaMega)
 # cite https://www.smogon.com/dex/sm/pokemon/
 ### ADD INTERACTION TERMS
 lm.intA <- step(lm.aic,.~.^2,direction="both",trace=0,k=2) #AIC
-# Calc.Usage ~ Type.1+HP+Attack+Defense+Sp.Atk+Speed+Attack:Sp.Atk+Type.1:Attack+HP:Defense+Type.1:Sp.Atk (adjr2 = 0.3616)
+# RUN 1: Calc.Usage ~ Type.1+HP+Attack+Defense+Sp.Atk+Speed+Attack:Sp.Atk+Type.1:Attack+HP:Defense+Type.1:Sp.Atk (adjr2 = 0.3616)
+# RUN 2: Calc.Usage ~ Type.2+HP+Attack+Sp.Def+Sp.Atk+Speed+Attack:Sp.Atk+Type.2:Attack+Type.2:Speed (adjr2 = 0.3648)
 lm.intB<- step(lm.aic,.~.^2,direction="both",trace=0,k=log(n)) #BIC
 # Calc.Usage ~ HP+Attack+Defense+Sp.Atk+Speed+Attack:Sp.Atk (adjr2 = 0.2778)
-summary(lm.intA) # 0.869048 (individ-t, Attack:Sp.Atk possibly insignificant)
-anova(lm.intA) # 0.52088, (partial-f, Type.1:Attack possibly insignificant)
-lm.reOrder <- lm(Calc.Usage~Type.1+HP+Attack+Defense+Sp.Atk+Speed+Type.1:Sp.Atk+HP:Defense+Attack:Sp.Atk+Type.1:Attack)
-anova(lm.reOrder)
-lm.intA <- lm(Calc.Usage~Type.1+HP+Attack+Defense+Sp.Atk+Speed+Type.1:Sp.Atk+HP:Defense)
 summary(lm.intA)
 ### CHECK MODEL ASSUMPTIONS (AGAIN)
 scatter.smooth(residuals(lm.intA)~predict(lm.intA)) # ordinary residual
@@ -71,21 +70,21 @@ scatter.smooth(rstudent(lm.intA)~predict(lm.intA)) # studentized residual
 boxcox(lm.intA)
 trans <- boxcox(lm.intA)
 trans$x[which.max(trans$y)]
-lm.transY <- lm(log(Calc.Usage)~Type.1+HP+Attack+Defense+Sp.Atk+Speed+HP:Defense+Type.1:Sp.Atk)
+lm.transY <- lm(log(Calc.Usage)~Type.2+HP+Attack+Sp.Def+Sp.Atk+Speed+Attack:Sp.Atk+Type.2:Attack+Type.2:Speed)
 scatter.smooth(rstudent(lm.transY)~predict(lm.transY)) # studentized residual
 plot(lm.transY)
-# outliers in QQ plot: 33 (smeargle), 75 (ditto), 554 (shedinja)
-# influential / high leverage: 121 (noibat), 264 (noivern)
+# outliers in QQ plot: 307 (Rattata), 421 (Smeargle), 927 (Ditto)
+# influential / high leverage: 52 (GroudonPrimal), 273 (Shuckle), 507 (Zekrom)
 ### CHECK FOR INFLUENTIAL POINTS
-thresh <- qf(0.5, df1=40, df2=n-40)
+thresh <- qf(0.5, df1=60, df2=n-60)
 outliers <- which(cooks.distance(lm.transY) > thresh)
 data[outliers,]
 # no influential, outlying points
-summary(lm.transY) # (adjr2 = 0.5997)
-
-lm.transY <- lm(log(Calc.Usage)~Type.1+HP+Attack+Defense+Sp.Atk+Speed+HP:Defense+Type.1:Sp.Atk)
-anova(lm.transY, test='Chisq')
-
+summary(lm.transY) # (adjr2 = 0.566)
+anova(lm.transY) 
+# choose to remove all interaction terms
+lm.transY <- lm(log(Calc.Usage)~Type.2+HP+Attack+Sp.Def+Sp.Atk+Speed)
+summary(lm.transY) # (adjr2 = 0.561)
 
 
 library(ggplot2)

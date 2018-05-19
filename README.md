@@ -1,5 +1,19 @@
 # stat318
 
+## Missing Pokemon
+WishiwashiSchool
+WishiwashiSolo
+DarmanitanStandard
+MiniorCore
+AegislashShield
+ZygardeComplete
+NecrozmaUltra
+MiniorMeteor
+MeloettaAria
+DarmanitanZen
+AegislashBlade
+MeloettaPirouette
+
 ## 5/18/2018 
 https://bulbapedia.bulbagarden.net/wiki/List_of_Pok%C3%A9mon_with_form_differences
 

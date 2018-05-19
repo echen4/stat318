@@ -1,4 +1,4 @@
-Name,Pokedex Number,Can_Evolve,Type 1,Type 2,Total,HP,Attack,Defense,Sp. Atk,Sp. Def,Speed,Generation,Legendary,Rank,Usage %,Raw,%,Real,%
+Name,ID,Can_Evolve,Type.1,Type.2,Total,HP,Attack,Defense,Sp.Atk,Sp.Def,Speed,Generation,Legendary,Rank,Usage.Per,Raw,Raw.Per,Real,Real.Per
 Tauros,128,FALSE,Normal,,490,75,100,95,40,70,110,1,FALSE,349,0.03%,3462,0.33%,2122,0.33%
 Arcanine,59,FALSE,Fire,,555,90,110,80,100,80,95,1,FALSE,148,0.23%,21098,2.02%,14174,2.19%
 Shelmet,616,TRUE,Bug,,305,50,40,85,40,65,25,5,FALSE,928,0.00%,113,0.01%,69,0.01%

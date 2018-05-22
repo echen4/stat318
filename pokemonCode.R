@@ -1,3 +1,4 @@
+# ANALYSIS
 library(leaps) # leaps
 library(MASS) # boxcox
 library(usdm) # vifstep
@@ -47,7 +48,7 @@ lm.aic <- step(lm.full,direction="both",trace=0,k=2) #AIC
 summary(lm.aic)
 ### CHECK MODEL ASSUMPTIONS
 scatter.smooth(residuals(lm.full)~predict(lm.full))
-scatter.smooth(residuals(lm.aic)~predict(lm.aic)) # ordinary residu-8080000al
+scatter.smooth(residuals(lm.aic)~predict(lm.aic)) # ordinary residual
 scatter.smooth(rstudent(lm.aic)~predict(lm.aic)) # studentized residual
 press(lm.aic) 
 abs(press(lm.full) - press(lm.aic))# compares to lm.full
@@ -83,18 +84,24 @@ anova(lm.transY)
 # choose to remove all interaction terms
 lm.transY <- lm(log(Calc.Usage)~Type.2+HP+Attack+Sp.Def+Sp.Atk+Speed)
 summary(lm.transY) # (adjr2 = 0.561)
+par(mfrow=c(2,2))
+plot(lm.transY)
 
-
+# FURTHER TESTING
 library(glmnet)
-# remove multicolinearity first?
 testX <- model.matrix(Calc.Usage~.,data=data.new)[,-1]
 Y <- data.new[,11]
 fit <- glmnet(testX, Y, alpha=1)
 fit
 
+# DATA VISUALIZATIONS
 library(ggplot2)
 ggplot(data, aes(Legendary, Total)) + geom_boxplot(colour="red")
-ggplot(data, aes(Attack, Defense)) + geom_point()
+ggplot(data, aes(Total, Calc.Usage)) + geom_point(alpha=0.5)
+ggplot(data, aes(Total, log(Calc.Usage))) + 
+  geom_point(alpha=0.5, aes(colour=Type.1)) +
+  stat_smooth(method="lm") +
+  ggtitle('Usage of Pokemon By Total Statistics Across Types')
 ggplot(data, aes(Type.1, Total)) + geom_boxplot(colour="red", fill="red", alpha=0.5,outlier.shape=1)
 
 
@@ -108,11 +115,4 @@ ggplot(data.new, aes(fill=Legendary, x=Type.2)) +
   geom_bar(position="fill", stat="count")
 ggplot(data, aes(x=Type.1, y=Total)) + 
   stat_summary(fun.y="mean", geom="bar")
-
-dodge <- position_dodge(width = 0.9)
-limits <- aes(ymax = Total$mean + myData$se,
-              ymin = myData$mean - myData$se)
-ggplot(data, aes(x=Type.2, y=Total, fill=Type.2)) + 
-  stat_summary(fun.y="mean", geom="bar") + guides(fill=FALSE) +
-  geom_errorbar(limits, position = dodge, width = 0.25) +
 detach(data.new)

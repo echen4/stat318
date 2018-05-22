@@ -96,14 +96,27 @@ fit
 
 # DATA VISUALIZATIONS
 library(ggplot2)
-ggplot(data, aes(Legendary, Total)) + geom_boxplot(colour="red")
+library(gridExtra)
+q1 <- ggplot(data, aes(Legendary, Total)) + geom_boxplot(colour="red")
+q2 <- ggplot(data, aes(Type.2, Total)) + geom_boxplot(colour="red", fill="red", alpha=0.5,outlier.shape=1)
+grid.arrange(q1,q2,ncol=2)
 ggplot(data, aes(Total, Calc.Usage)) + geom_point(alpha=0.5)
-ggplot(data, aes(Total, log(Calc.Usage))) + 
+
+p1 <- ggplot(data, aes(Total, log(Calc.Usage))) + 
   geom_point(alpha=0.5, aes(colour=Type.1)) +
   stat_smooth(method="lm") +
-  ggtitle('Usage of Pokemon By Total Statistics Across Types')
-ggplot(data, aes(Type.1, Total)) + geom_boxplot(colour="red", fill="red", alpha=0.5,outlier.shape=1)
-
+  ggtitle('Usage of Pokemon By Total Statistics Across Type 1')
+p2 <- ggplot(data, aes(Total, log(Calc.Usage))) + 
+  geom_point(alpha=0.5, aes(colour=Type.2)) +
+  stat_smooth(method="lm") +
+  ggtitle('Usage of Pokemon By Total Statistics Across Type 2')
+p3 <- ggplot(data.new, aes(fill=Legendary, x=Type.1)) + 
+  geom_bar(position="fill", stat="count") +
+  ggtitle('Legendary Distribution by Type 1')
+p4 <- ggplot(data.new, aes(fill=Legendary, x=Type.2)) + 
+  geom_bar(position="fill", stat="count") +
+  ggtitle('Legendary Distribution by Type 2')
+grid.arrange(p1,p2,p3,p4,ncol=2)
 
 ggplot(data.new, aes(fill=Legendary, x=Type.1)) + 
   geom_bar(position="dodge", stat="count")
@@ -113,6 +126,6 @@ ggplot(data.new, aes(fill=Legendary, x=Type.2)) +
   geom_bar(position="dodge", stat="count")
 ggplot(data.new, aes(fill=Legendary, x=Type.2)) + 
   geom_bar(position="fill", stat="count")
-ggplot(data, aes(x=Type.1, y=Total)) + 
+ggplot(data, aes(x=Type.2, y=Total)) + 
   stat_summary(fun.y="mean", geom="bar")
 detach(data.new)

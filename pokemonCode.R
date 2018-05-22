@@ -33,8 +33,6 @@ lm.full <- lm(Calc.Usage~.,data=data.new)
 summary(lm.full)
 quantData <- data.new[,-c(1,2,3,11)]
 quantX <- model.matrix(Calc.Usage~.,data=quantData)[,-1]
-X <- data.new[,-12]
-Y <- data.new[,12]
 vifstep(quantX,th=10)
 detach(data.new)
 data.new <- data.new[,-4]
@@ -87,7 +85,34 @@ lm.transY <- lm(log(Calc.Usage)~Type.2+HP+Attack+Sp.Def+Sp.Atk+Speed)
 summary(lm.transY) # (adjr2 = 0.561)
 
 
+library(glmnet)
+# remove multicolinearity first?
+testX <- model.matrix(Calc.Usage~.,data=data.new)[,-1]
+Y <- data.new[,11]
+fit <- glmnet(testX, Y, alpha=1)
+fit
+
 library(ggplot2)
 ggplot(data, aes(Legendary, Total)) + geom_boxplot(colour="red")
 ggplot(data, aes(Attack, Defense)) + geom_point()
 ggplot(data, aes(Type.1, Total)) + geom_boxplot(colour="red", fill="red", alpha=0.5,outlier.shape=1)
+
+
+ggplot(data.new, aes(fill=Legendary, x=Type.1)) + 
+  geom_bar(position="dodge", stat="count")
+ggplot(data.new, aes(fill=Legendary, x=Type.1)) + 
+  geom_bar(position="fill", stat="count")
+ggplot(data.new, aes(fill=Legendary, x=Type.2)) + 
+  geom_bar(position="dodge", stat="count")
+ggplot(data.new, aes(fill=Legendary, x=Type.2)) + 
+  geom_bar(position="fill", stat="count")
+ggplot(data, aes(x=Type.1, y=Total)) + 
+  stat_summary(fun.y="mean", geom="bar")
+
+dodge <- position_dodge(width = 0.9)
+limits <- aes(ymax = Total$mean + myData$se,
+              ymin = myData$mean - myData$se)
+ggplot(data, aes(x=Type.2, y=Total, fill=Type.2)) + 
+  stat_summary(fun.y="mean", geom="bar") + guides(fill=FALSE) +
+  geom_errorbar(limits, position = dodge, width = 0.25) +
+detach(data.new)
